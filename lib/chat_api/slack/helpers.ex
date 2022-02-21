@@ -957,20 +957,12 @@ defmodule ChatApi.Slack.Helpers do
       %{
         "type" => "mrkdwn",
         "text" => "*Email:*\n#{email || "N/A"}"
-      },
-      %{
-        "type" => "mrkdwn",
-        "text" => "*Source:*\n#{format_message_source(message)}"
       }
     ]
 
     case message.source do
       "chat" ->
         Enum.concat(default_fields, [
-          %{
-            "type" => "mrkdwn",
-            "text" => "*Last seen URL:*\n#{current_url || "N/A"}"
-          },
           %{
             "type" => "mrkdwn",
             "text" => "*Device:*\n#{format_customer_device(customer)}"
@@ -1055,21 +1047,6 @@ defmodule ChatApi.Slack.Helpers do
         },
         %{
           "type" => "divider"
-        },
-        %{
-          "type" => "actions",
-          "elements" => [
-            %{
-              "type" => "button",
-              "text" => %{
-                "type" => "plain_text",
-                "text" => "Mark as resolved"
-              },
-              "value" => conversation.id,
-              "action_id" => "close_conversation",
-              "style" => "primary"
-            }
-          ]
         }
       ]
     }
