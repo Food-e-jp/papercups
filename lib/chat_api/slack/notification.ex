@@ -148,7 +148,7 @@ defmodule ChatApi.Slack.Notification do
           Slack.Client.send_message(
             %{
               "channel" => channel,
-              "text" => "(Send a message here to get started!)",
+              "text" => "Send a message here to get started. \n\nNote 1: Your reply will be sent directly to the customer!\nNote 2: Start a message with `;;` or `\\\\` to send an internal note.",
               "thread_ts" => thread.slack_thread_ts
             },
             access_token

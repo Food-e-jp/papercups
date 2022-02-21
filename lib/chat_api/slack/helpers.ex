@@ -500,7 +500,7 @@ defmodule ChatApi.Slack.Helpers do
       [nil, nil] -> "Anonymous User"
       [x, nil] -> x
       [nil, y] -> y
-      [x, y] -> "#{x} (#{y})"
+      [x, y] -> "#{x}"
     end
   end
 
@@ -786,7 +786,7 @@ defmodule ChatApi.Slack.Helpers do
         "*:female-technologist: #{Slack.Notification.format_user_name(user)}*: #{text}"
 
       %Message{customer: %Customer{} = customer} ->
-        "*:wave: #{identify_customer(customer)}*: #{text}"
+        "*#{identify_customer(customer)}*: \n ------\n#{text}\n ------\n"
 
       %Message{customer_id: nil, user_id: user_id} when not is_nil(user_id) ->
         "*:female-technologist: Agent*: #{text}"
@@ -805,13 +805,13 @@ defmodule ChatApi.Slack.Helpers do
         "*:female-technologist: #{Slack.Notification.format_user_name(user)}*: #{text}"
 
       %Message{customer: %Customer{} = customer} ->
-        "*:wave: #{identify_customer(customer)}*: #{text}"
+        "*#{identify_customer(customer)}*: #{text}"
 
       %Message{customer_id: nil, user_id: user_id} when not is_nil(user_id) ->
         "*:female-technologist: Agent*: #{text}"
 
       %Message{customer_id: customer_id, user_id: nil} when not is_nil(customer_id) ->
-        "*:wave: #{identify_customer(conversation.customer)}*: #{text}"
+        "*#{identify_customer(conversation.customer)}*: #{text}"
 
       _ ->
         Logger.error("Unrecognized message format: #{inspect(message)}")
@@ -880,8 +880,7 @@ defmodule ChatApi.Slack.Helpers do
 
     [
       formatted_text,
-      "Reply to this thread to start chatting, or view in the #{dashboard_link} :rocket:",
-      "(Start a message with `;;` or `\\\\` to send an <https://github.com/papercups-io/papercups/pull/562|internal note>.)"
+      "Reply to this thread to start chatting."
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("\n\n")
