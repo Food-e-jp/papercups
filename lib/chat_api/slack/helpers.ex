@@ -786,7 +786,7 @@ defmodule ChatApi.Slack.Helpers do
         "*:female-technologist: #{Slack.Notification.format_user_name(user)}*: #{text}"
 
       %Message{customer: %Customer{} = customer} ->
-        "*#{identify_customer(customer)}*: \n ------\n#{text}\n ------\n"
+        "*#{identify_customer(customer)}*: #{text}"
 
       %Message{customer_id: nil, user_id: user_id} when not is_nil(user_id) ->
         "*:female-technologist: Agent*: #{text}"
@@ -811,7 +811,7 @@ defmodule ChatApi.Slack.Helpers do
         "*:female-technologist: Agent*: #{text}"
 
       %Message{customer_id: customer_id, user_id: nil} when not is_nil(customer_id) ->
-        "*#{identify_customer(conversation.customer)}*: #{text}"
+        "*#{identify_customer(conversation.customer)}*: \n=========\n#{text}\n=========\n"
 
       _ ->
         Logger.error("Unrecognized message format: #{inspect(message)}")
@@ -880,7 +880,7 @@ defmodule ChatApi.Slack.Helpers do
 
     [
       formatted_text,
-      "Reply to this thread to start chatting."
+      "```Reply to this thread to start chatting```"
     ]
     |> Enum.reject(&is_nil/1)
     |> Enum.join("\n\n")
@@ -968,10 +968,6 @@ defmodule ChatApi.Slack.Helpers do
           },
           %{
             "type" => "mrkdwn",
-            "text" => "*Timezone:*\n#{time_zone || "N/A"}"
-          },
-          %{
-            "type" => "mrkdwn",
             "text" => "*Status:*\n#{get_slack_conversation_status(conversation)}"
           }
         ])
@@ -994,10 +990,6 @@ defmodule ChatApi.Slack.Helpers do
 
       source when source in ["slack", "mattermost"] ->
         Enum.concat(default_fields, [
-          %{
-            "type" => "mrkdwn",
-            "text" => "*Timezone:*\n#{time_zone || "N/A"}"
-          },
           %{
             "type" => "mrkdwn",
             "text" => "*Status:*\n#{get_slack_conversation_status(conversation)}"
